@@ -280,7 +280,8 @@ Output MUST be a JSON object {"lines": [...]} with EXACTLY $lineCount strings.""
                 },
             )
         }
-        if (stream) put("stream", true)
+        // Always explicit: some OpenAI-compatible proxies stream by default when the field is missing.
+        put("stream", stream)
     }
 }
 

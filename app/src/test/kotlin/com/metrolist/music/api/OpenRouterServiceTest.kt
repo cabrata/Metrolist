@@ -1,14 +1,56 @@
 package com.metrolist.music.api
 
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.boolean
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
+import org.junit.Assume.assumeTrue
 import org.junit.Test
 
 class OpenRouterServiceTest {
+    @Test
+    fun `non streaming requests explicitly disable proxy default streaming`() {
+        for (baseUrl in listOf("https://openrouter.ai/api/v1/chat/completions", "https://proxy.example/v1/chat/completions")) {
+            val request = buildTranslationRequest(
+                text = "one\ntwo",
+                targetLanguage = "Indonesian",
+                model = "model",
+                mode = "Translated",
+                customSystemPrompt = "",
+                baseUrl = baseUrl,
+            )
+            assertFalse(request.getValue("stream").jsonPrimitive.boolean)
+        }
+    }
+
+    @Test
+    fun `custom endpoint translates through the real non streaming service`() {
+        val url = System.getenv("METROLIST_AI_TEST_URL").orEmpty()
+        val apiKey = System.getenv("METROLIST_AI_TEST_KEY").orEmpty()
+        val model = System.getenv("METROLIST_AI_TEST_MODEL").orEmpty()
+        assumeTrue("Live endpoint test requires explicit environment credentials", url.isNotBlank() && apiKey.isNotBlank() && model.isNotBlank())
+
+        val lines = runBlocking {
+            OpenRouterService.translate(
+                text = "The moon is bright\nThe night is quiet",
+                targetLanguage = "Indonesian",
+                apiKey = apiKey,
+                baseUrl = url,
+                model = model,
+                mode = "Translated",
+                maxRetries = 1,
+            ).getOrThrow()
+        }
+        assertEquals(2, lines.size)
+        assertTrue(lines.all { it.isNotBlank() && !it.startsWith("data:") })
+        assertTrue(lines[0].contains("bulan", ignoreCase = true))
+        assertTrue(lines[1].contains("malam", ignoreCase = true))
+    }
+
     @Test
     fun `translation parsing handles fenced and short responses`() {
         assertEquals(
