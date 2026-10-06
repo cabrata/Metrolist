@@ -206,7 +206,7 @@ fun OriginalLyrics(
     val shareLyricsStr = stringResource(R.string.share_lyrics)
     val failedToCreateImageTemplate = stringResource(R.string.failed_to_create_image)
 
-    val lyricsTextPosition by rememberEnumPreference(LyricsTextPositionKey, LyricsPosition.CENTER)
+    val lyricsTextPosition by rememberEnumPreference(LyricsTextPositionKey, LyricsPosition.LEFT)
     val changeLyrics by rememberPreference(LyricsClickKey, true)
     val scrollLyrics by rememberPreference(LyricsScrollKey, true)
     val romanizeLyricsList = rememberPreference(LyricsRomanizeList, "")
@@ -236,7 +236,7 @@ fun OriginalLyrics(
 
     val playerBackground by rememberEnumPreference(
         key = PlayerBackgroundStyleKey,
-        defaultValue = PlayerBackgroundStyle.DEFAULT,
+        defaultValue = PlayerBackgroundStyle.BLUR,
     )
 
     val darkTheme by rememberEnumPreference(DarkModeKey, defaultValue = DarkMode.AUTO)

@@ -566,7 +566,9 @@ class MainActivity : FragmentActivity() {
             }
         }
 
-        val enableDynamicTheme by rememberPreference(DynamicThemeKey, defaultValue = true)
+        // ponytail: accent stays on the chosen (blue) palette and never follows album art.
+        // Re-enable by reading DynamicThemeKey again if album-tinted UI is wanted.
+        val enableDynamicTheme = false
         val enableHighRefreshRate by rememberPreference(EnableHighRefreshRateKey, defaultValue = true)
 
         LaunchedEffect(enableHighRefreshRate) {

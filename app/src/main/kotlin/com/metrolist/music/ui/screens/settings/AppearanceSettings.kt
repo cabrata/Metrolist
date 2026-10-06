@@ -195,7 +195,7 @@ fun AppearanceSettings(
     val (playerBackground, onPlayerBackgroundChange) =
         rememberEnumPreference(
             PlayerBackgroundStyleKey,
-            defaultValue = PlayerBackgroundStyle.DEFAULT,
+            defaultValue = PlayerBackgroundStyle.BLUR,
         )
 
     val (defaultOpenTab, onDefaultOpenTabChange) =
@@ -211,7 +211,7 @@ fun AppearanceSettings(
     val (lyricsPosition, onLyricsPositionChange) =
         rememberEnumPreference(
             LyricsTextPositionKey,
-            defaultValue = LyricsPosition.CENTER,
+            defaultValue = LyricsPosition.LEFT,
         )
     val (lyricsClick, onLyricsClickChange) = rememberPreference(LyricsClickKey, defaultValue = true)
     val (lyricsScroll, onLyricsScrollChange) =
@@ -325,10 +325,7 @@ fun AppearanceSettings(
             defaultValue = true,
         )
 
-    val availableBackgroundStyles =
-        PlayerBackgroundStyle.entries.filter {
-            it != PlayerBackgroundStyle.BLUR || Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-        }
+    val availableBackgroundStyles = PlayerBackgroundStyle.entries
 
     val (defaultChip, onDefaultChipChange) =
         rememberEnumPreference(

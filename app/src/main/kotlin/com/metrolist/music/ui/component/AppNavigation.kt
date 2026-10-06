@@ -12,6 +12,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.unit.dp
 import androidx.compose.material3.NavigationRail
 import androidx.compose.material3.NavigationRailItem
 import androidx.compose.material3.Text
@@ -139,15 +143,26 @@ fun AppNavigationBar(
     onSearchLongClick: (() -> Unit)? = null,
     onHomeLongHold: (() -> Unit)? = null,
 ) {
-    val containerColor = if (pureBlack) Color.Black else MaterialTheme.colorScheme.surfaceContainer
+    val containerColor = if (pureBlack) Color.Black.copy(alpha = 0.9f) else MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
     val contentColor = if (pureBlack) Color.White else MaterialTheme.colorScheme.onSurfaceVariant
     val haptics = LocalHapticFeedback.current
     val viewConfiguration = LocalViewConfiguration.current
+    val hairline = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+    val itemColors = NavigationBarItemDefaults.colors(
+        selectedIconColor = MaterialTheme.colorScheme.primary,
+        selectedTextColor = MaterialTheme.colorScheme.primary,
+        indicatorColor = Color.Transparent,
+        unselectedIconColor = contentColor,
+        unselectedTextColor = contentColor,
+    )
 
     NavigationBar(
-        modifier = modifier,
+        modifier = modifier.drawBehind {
+            drawLine(hairline, Offset.Zero, Offset(size.width, 0f), 1.dp.toPx())
+        },
         containerColor = containerColor,
-        contentColor = contentColor
+        contentColor = contentColor,
+        tonalElevation = 0.dp,
     ) {
         navigationItems.forEach { screen ->
             val isSelected = remember(currentRoute, screen.route) {
@@ -190,6 +205,7 @@ fun AppNavigationBar(
 
             NavigationBarItem(
                 selected = isSelected,
+                colors = itemColors,
                 onClick = {
                     if (!isSearchItem && !isHomeHoldItem) {
                         onItemClick(screen, currentIsSelected)

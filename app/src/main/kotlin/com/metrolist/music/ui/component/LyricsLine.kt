@@ -6,6 +6,10 @@
 package com.metrolist.music.ui.component
 
 import android.graphics.BlurMaskFilter
+import android.os.Build
+import androidx.compose.animation.core.spring
+import androidx.compose.ui.graphics.BlurEffect
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -200,7 +204,37 @@ internal fun LyricsLine(
     }) {
         @Composable
         fun LyricContent() {
-            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = agentAlignment) {
+            // Apple Music style depth: active line pops forward, distant lines soften.
+            val distance = if (isSynced && isAutoScrollEnabled && displayedCurrentLineIndex >= 0) abs(index - displayedCurrentLineIndex) else 0
+            val lineScale by animateFloatAsState(
+                if (isActiveLine || !isSynced || item.isBackground) 1f else 0.94f,
+                spring(dampingRatio = 0.8f, stiffness = 200f),
+                label = "lyricsLineScale",
+            )
+            val lineBlur by animateFloatAsState(
+                if (isActiveLine || item.isBackground) 0f else distance.coerceAtMost(4) * 1.2f,
+                tween(400),
+                label = "lyricsLineBlur",
+            )
+            Column(
+                modifier = Modifier.fillMaxWidth().graphicsLayer {
+                    scaleX = lineScale
+                    scaleY = lineScale
+                    transformOrigin = when (agentTextAlign) {
+                        TextAlign.Right -> TransformOrigin(1f, 0.5f)
+                        TextAlign.Center -> TransformOrigin.Center
+                        else -> TransformOrigin(0f, 0.5f)
+                    }
+                    // RenderEffect is API 31+. Older devices just skip the blur.
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && lineBlur > 0.1f) {
+                        val px = lineBlur.dp.toPx()
+                        renderEffect = BlurEffect(px, px, TileMode.Decal)
+                    } else {
+                        renderEffect = null
+                    }
+                },
+                horizontalAlignment = agentAlignment,
+            ) {
                 val inactiveAlpha = if (item.isBackground) 0.08f else 0.2f
                 val activeAlpha = 1f
                 val focusedAlpha = if (item.isBackground) 0.5f else 0.3f
