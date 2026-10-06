@@ -1,39 +1,26 @@
 <div align="center">
 
-<img src="fastlane/metadata/android/en-US/images/icon.png" alt="Metrolist app icon" width="200" />
+<img src="fastlane/metadata/android/en-US/images/icon.png" alt="Metrolist app icon" width="160" />
 
-# Metrolist
+# Metrolist · Caliph Edition
 
-### YouTube Music client for Android
-
-<br/>
-
-<a href="https://www.blacksmith.sh">
-  <img src="assets/blacksmith-powered.png" alt="CI powered by Blacksmith" width="280" />
-</a>
-
-<br/>
-<br/>
-
-[![Latest release](https://img.shields.io/github/v/release/MetrolistGroup/Metrolist?style=for-the-badge&labelColor=0d1117)](https://github.com/MetrolistGroup/Metrolist/releases)
-[![License](https://img.shields.io/github/license/MetrolistGroup/metrolist?style=for-the-badge&labelColor=0d1117)](https://github.com/MetrolistGroup/Metrolist/blob/main/LICENSE)
-[![Downloads](https://img.shields.io/github/downloads/MetrolistGroup/Metrolist/total?style=for-the-badge&labelColor=0d1117)](https://github.com/MetrolistGroup/Metrolist/releases)
+### An Apple Music styled fork of [Metrolist](https://github.com/MetrolistGroup/Metrolist), the YouTube Music client for Android
 
 <br/>
 
-[![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white&labelColor=0d1117)](https://dsc.gg/metrolist)
-[![Telegram](https://img.shields.io/badge/Telegram-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white&labelColor=0d1117)](https://t.me/metrolistapp)
+[![Nightly](https://img.shields.io/github/actions/workflow/status/cabrata/Metrolist/caliph.yml?branch=main&style=for-the-badge&label=nightly&labelColor=0d1117)](https://github.com/cabrata/Metrolist/actions/workflows/caliph.yml)
+[![Download](https://img.shields.io/badge/download-APK-0A84FF?style=for-the-badge&labelColor=0d1117)](https://github.com/cabrata/Metrolist/releases/tag/nightly)
+[![License](https://img.shields.io/github/license/cabrata/Metrolist?style=for-the-badge&labelColor=0d1117)](LICENSE)
 
 <br/>
 
-[**Download**](#download-now) · [**Features**](#features) · [**Translate**](#translations) · [**FAQ**](#faq) · [**Support**](#support-the-project)
+[**Download**](#download) · [**What's different**](#whats-different) · [**Features**](#features) · [**Build**](#build) · [**Credits**](#credits)
 
 </div>
 
-> [!WARNING]
-> # MAINTENANCE MODE
-> Metrolist is currently in maintenance mode. This means we will only be fixing bugs and making minor improvements. Please do not submit PRs for new features or major changes, as they will not be accepted.  
-> The app is **NOT** dead, please stay tuned for updates on our discord (found above).
+> [!NOTE]
+> This is an **unofficial fork**. It is not maintained by the Metrolist team. Please report bugs of this edition here, not upstream.
+> Package name is `com.caliph.metrolist`, so it installs **alongside** the official Metrolist.
 
 > [!WARNING]
 > **Regional Restriction** - If YouTube Music is unavailable in your region, this app will not work without a **VPN or proxy** connecting to a supported region.
@@ -44,14 +31,36 @@
 
 <h1><a id="screenshots"></a>Screenshots</h1>
 
-<img src="fastlane/metadata/android/en-US/images/screenshots/screenshot_1.png" alt="Home screen" width="30%" />
-<img src="fastlane/metadata/android/en-US/images/screenshots/screenshot_2.png" alt="Artist screen" width="30%" />
-<img src="fastlane/metadata/android/en-US/images/screenshots/screenshot_3.png" alt="Recognize music screen" width="30%" />
-<img src="fastlane/metadata/android/en-US/images/screenshots/screenshot_4.png" alt="Listen together screen" width="30%" />
-<img src="fastlane/metadata/android/en-US/images/screenshots/screenshot_5.png" alt="Player screen" width="30%" />
-<img src="fastlane/metadata/android/en-US/images/screenshots/screenshot_6.png" alt="Player lyrics screen" width="30%" />
+<img src="assets/screenshots/player.webp" alt="Player with animated artwork background" width="24%" />
+<img src="assets/screenshots/lyrics.webp" alt="Apple Music style synced lyrics" width="24%" />
+<img src="assets/screenshots/lyrics-2.webp" alt="Lyrics with depth blur" width="24%" />
+<img src="assets/screenshots/search.webp" alt="Search in the blue theme" width="24%" />
 
 </div>
+
+---
+
+<div align="center">
+
+<h1><a id="whats-different"></a>What's different from Metrolist</h1>
+
+</div>
+
+| | Metrolist | Caliph Edition |
+|---|---|---|
+| **Accent color** | Follows album art / wallpaper | Fixed Apple system blue `#0A84FF` |
+| **Player background** | Solid by default | Animated artwork mesh, like Apple Music |
+| **Lyrics** | Centered, Material style | Left aligned, Apple Music style word wipe, lift and glow |
+| **Lyric depth** | Opacity only | Inactive lines shrink and blur by distance |
+| **Interludes** | Wavy progress ring | Three breathing dots |
+| **Tab bar & mini player** | Material 3 | Lightweight "liquid glass" look |
+| **Package** | `com.metrolist.music` | `com.caliph.metrolist` |
+
+All effects are tuned to stay light on battery:
+
+- The background is a tiny 12px copy of the cover that gets upscaled, so it needs no heavy blur.
+- It only animates at 30 fps, and only while music is playing.
+- Blur effects run only on Android 12+. Older devices get the same look without the blur.
 
 ---
 
@@ -67,8 +76,7 @@
 - Stream any song or video from YouTube Music
 - Background playback
 - Download & cache for offline use
-- Skip silence
-- Sleep timer
+- Skip silence, sleep timer
 
 </td>
     <td width="50%" valign="top">
@@ -85,7 +93,7 @@
     <td width="50%" valign="top">
 
 #### Lyrics & Discovery
-- Live synced lyrics
+- Apple Music style synced lyrics with word-by-word highlighting
 - AI-powered lyrics translation
 - Personalized quick picks
 - Search songs, albums, artists, videos, and playlists
@@ -95,11 +103,8 @@
 
 #### Library & Account
 - Full library management
-- Local playlists
-- Import playlists
-- Reorder songs in playlist or queue
-- YouTube Music account login
-- Sync songs, artists, albums, and playlists
+- Local playlists, playlist import
+- YouTube Music account login & sync
 
 </td>
   </tr>
@@ -108,17 +113,16 @@
 
 #### Social
 - Listen together with friends in real-time
-- Last.fm integration for scrobbling
-- Safe Discord Rich Presence
+- Last.fm scrobbling
+- Discord Rich Presence
 
 </td>
     <td width="50%" valign="top">
 
 #### Interface
+- Apple Music inspired design in blue
+- Light / Dark / Black theme modes
 - Home screen widget
-- Light / Dark / Black / Dynamic theme modes
-- Dynamic color + 19 preset color palettes
-- Built with Material 3
 
 </td>
   </tr>
@@ -130,87 +134,13 @@
 
 <div align="center">
 
-<h1><a id="download-now"></a>Download Now</h1>
+<h1><a id="download"></a>Download</h1>
 
-<h2>Stable Release</h2>
-
-<table>
-  <tr>
-    <th align="center">Obtainium</th>
-    <th align="center">IzzyOnDroid</th>
-  </tr>
-  <tr>
-    <td align="center">
-      <a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/MetrolistGroup/Metrolist/">
-        <img src="assets/badges/obtainium.svg" alt="Add Metrolist to Obtainium" height="100">
-      </a>
-    </td>
-    <td align="center">
-      <a href="https://apt.izzysoft.de/fdroid/index/apk/com.metrolist.music">
-        <img src="assets/badges/izzyondroid.svg" alt="Get Metrolist on IzzyOnDroid" height="100">
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <th align="center">OpenAPK</th>
-    <th align="center">GitHub</th>
-  </tr>
-  <tr>
-    <td align="center">
-      <a href="https://www.openapk.net/metrolist/com.metrolist.music/">
-        <img src="assets/badges/openapk.svg" alt="Get Metrolist on OpenAPK" height="100">
-      </a>
-    </td>
-    <td align="center">
-      <a href="https://github.com/MetrolistGroup/Metrolist/releases/latest/download/Metrolist.apk">
-        <img src="assets/badges/github-stable.svg" alt="Get the stable Metrolist release on GitHub" height="100">
-      </a>
-    </td>
-  </tr>
-</table>
-
-<h2>Nightly Build</h2>
-
-<table>
-  <tr>
-    <th align="center">GitHub</th>
-  </tr>
-  <tr>
-    <td align="center">
-      <a href="https://github.com/MetrolistGroup/Metrolist/releases/download/nightly/Metrolist-with-Google-Cast.apk">
-        <img src="assets/badges/github-nightly.svg" alt="Get the Metrolist nightly build on GitHub" height="120">
-      </a>
-    </td>
-  </tr>
-</table>
-
-</div>
-
----
-
-<div align="center">
-
-<h1><a id="faq"></a>FAQ</h1>
-
-<h3>Got questions? Check out our <a href="https://metrolist.cc/#faq">FAQ page</a> for answers to the most common ones.</h3>
-
-</div>
-
----
-
-<div align="center">
-
-<h1><a id="translations"></a>Translations</h1>
-
-[![Translation status](https://img.shields.io/weblate/progress/metrolist?style=for-the-badge&labelColor=0d1117)](https://hosted.weblate.org/engage/metrolist/)
-
-<h3>We use Weblate to translate Metrolist. <a href="https://hosted.weblate.org/projects/Metrolist/">Help us bring Metrolist to more people!</a></h3>
-
-<a href="https://hosted.weblate.org/projects/Metrolist/">
-  <img src="https://hosted.weblate.org/widget/Metrolist/horizontal-auto.svg" alt="Translation status" />
+<a href="https://github.com/cabrata/Metrolist/releases/tag/nightly">
+  <img src="assets/badges/github-nightly.svg" alt="Get the nightly build on GitHub" height="120">
 </a>
 
-<h3>Thank you! Every translation makes Metrolist a little more accessible to someone, somewhere in the world.</h3>
+<h3>Every push to <code>main</code> is built by GitHub Actions and published to the <a href="https://github.com/cabrata/Metrolist/releases/tag/nightly">nightly</a> release.</h3>
 
 </div>
 
@@ -218,22 +148,28 @@
 
 <div align="center">
 
-<h1><a id="support-the-project"></a>Support the Project</h1>
+<h1><a id="build"></a>Build it yourself</h1>
 
-<h3>Metrolist is free and open-source. If it brings you joy, consider supporting its development!</h3>
+</div>
 
-#### Monero (XMR)
+Requires JDK 21 and the Android SDK.
 
-<img src="assets/XMR.png" alt="Monero QR code" width="150" />
-
-```text
-44XjSELSWcgJTZiCKzjpCQWyXhokrH9RqH3rpp35FkSKi57T25hniHWHQNhLeXyFn3DDYqufmfRB1iEtENerZpJc7xJCcqt
+```bash
+./gradlew :app:assembleFossDebug
 ```
 
-#### Buy Me a Coffee
+The APK is written to `app/build/outputs/apk/foss/debug/`.
 
-<a href="https://www.buymeacoffee.com/mostafaalagamy">
-  <img src="assets/buymeacoffee.png" alt="Buy Me a Coffee" width="150" />
+---
+
+<div align="center">
+
+<h1><a id="credits"></a>Credits</h1>
+
+<h3>All the hard work behind this app belongs to the <a href="https://github.com/MetrolistGroup/Metrolist">Metrolist</a> team and contributors. This fork only changes the look. Please support the original project.</h3>
+
+<a href="https://github.com/MetrolistGroup/Metrolist/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=MetrolistGroup/Metrolist" alt="Metrolist contributors" />
 </a>
 
 </div>
@@ -293,34 +229,11 @@
       <td align="center"><a href="https://github.com/ZemerTeam/zemer-cipher"><strong>zemer-cipher</strong></a></td>
       <td>YouTube cipher deobfuscation and PoToken generation</td>
     </tr>
-    <tr>
-      <td align="center"><a href="https://www.blacksmith.sh"><strong>Blacksmith</strong></a></td>
-      <td>High-performance GitHub Actions runners powering our CI</td>
-    </tr>
   </tbody>
 </table>
 
-<br/>
-
-<a href="https://www.blacksmith.sh">
-  <img src="assets/blacksmith-powered.png" alt="CI powered by Blacksmith" width="280" />
-</a>
 
 <h3>We also thank the entire open-source community! For every library, tool, and API that powers this project.</h3>
-
-</div>
-
----
-
-<div align="center">
-
-<h1>Contributors</h1>
-
-<h3>This project wouldn't exist without these amazing people!</h3>
-
-<a href="https://github.com/MetrolistGroup/Metrolist/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=MetrolistGroup/Metrolist" alt="Contributors" />
-</a>
 
 </div>
 
@@ -336,13 +249,14 @@ All trademarks, service marks, and intellectual property rights referenced in th
 
 </div>
 
+
 ---
 
 <div align="center">
 
 <br/>
 
-**Made with ❤️ by [Mo Agamy](https://github.com/mostafaalagamy)**
+**Original app by [Mo Agamy](https://github.com/mostafaalagamy) and the [Metrolist contributors](https://github.com/MetrolistGroup/Metrolist/graphs/contributors). Apple Music style edition by [cabrata](https://github.com/cabrata).**
 
 **This project stands with Palestine 🇵🇸**
 
