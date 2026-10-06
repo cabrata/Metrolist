@@ -14,6 +14,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.AnimationState
 import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.animateDecay
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.exponentialDecay
@@ -29,6 +30,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -135,9 +137,12 @@ private val LYRICS_ITEM_FALLBACK_HEIGHT_DP = 68.dp
 private val LYRICS_ITEM_GAP_DP = 16.dp
 private val LYRICS_FADE_TOP_DP = 130.dp
 private val LYRICS_FADE_BOTTOM_DP = 160.dp
-private const val LYRICS_STAGGER_DELAY_PER_DISTANCE = 20
-private const val LYRICS_STAGGER_DELAY_MAX_MS = 200
+private const val LYRICS_STAGGER_DELAY_PER_DISTANCE = 45
+private const val LYRICS_STAGGER_DELAY_MAX_MS = 360
 private const val LYRICS_PREVIEW_TIME = 8000L
+
+// Cubic ease-in-out, same curve as the reference renderer's scroll.
+private val LyricsEaseInOut = Easing { x -> if (x < 0.5f) 4f * x * x * x else 1f - (-2f * x + 2f).let { it * it * it } / 2f }
 
 @OptIn(
     ExperimentalMaterial3Api::class,
@@ -708,7 +713,7 @@ fun ExperimentalLyrics(
                         targetValue = targetProviderBase,
                         animationSpec = if (isInitialLayout || !isAutoScrollEnabled) snap()
                         else {
-                            tween(750, 0, FastOutSlowInEasing)
+                            tween(550, 0, LyricsEaseInOut)
                         },
                         label = "lyricsProviderOffset"
                     )
@@ -731,7 +736,7 @@ fun ExperimentalLyrics(
                             targetValue = if (isAutoScrollEnabled) targetOffset else frozenOffset.floatValue,
                             animationSpec = if (isInitialLayout || !isAutoScrollEnabled) snap() 
                                             else {
-                                                tween(750, (distance * LYRICS_STAGGER_DELAY_PER_DISTANCE).coerceAtMost(LYRICS_STAGGER_DELAY_MAX_MS), FastOutSlowInEasing)
+                                                tween(550, (distance * LYRICS_STAGGER_DELAY_PER_DISTANCE).coerceAtMost(LYRICS_STAGGER_DELAY_MAX_MS), LyricsEaseInOut)
                                             },
                             label = "lyricStaggeredOffset_$listIndex"
                         )
@@ -749,7 +754,10 @@ fun ExperimentalLyrics(
                                             currentEffectivePosition >= listItem.gapStartMs &&
                                             currentEffectivePosition <= listItem.gapEndMs - 650L
                                     IntervalIndicator(listItem.gapStartMs, listItem.gapEndMs - 650L, currentEffectivePosition, visible, expressiveAccent,
-                                        Modifier.fillMaxWidth().onSizeChanged { itemHeights[listIndex] = it.height }.padding(horizontal = 24.dp).wrapContentWidth(Alignment.CenterHorizontally))
+                                        Modifier.fillMaxWidth().onSizeChanged { itemHeights[listIndex] = it.height }.then(
+                                            if (lyricsTextPosition == LyricsPosition.LEFT) Modifier.padding(horizontal = 11.dp).fillMaxWidth()
+                                            else Modifier.padding(horizontal = 24.dp).wrapContentWidth(Alignment.CenterHorizontally).width(66.dp)
+                                        ))
                                 }
                                 is LyricsListItem.Line -> {
                                     val index = listItem.index
